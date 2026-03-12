@@ -7,6 +7,9 @@ function App() {
   const [surah, setSurah] = useState(null);
   const [dark, setDark] = useState(false);
 
+  // NEW: selected reciter
+  const [reciter, setReciter] = useState("1");
+
   useEffect(() => {
     if (dark) {
       document.body.classList.add("dark");
@@ -26,7 +29,12 @@ function App() {
       {!surah ? (
         <SurahList setSurah={setSurah} />
       ) : (
-        <Reader surah={surah} setSurah={setSurah} />
+        <Reader
+          surah={surah}
+          setSurah={setSurah}
+          reciter={reciter}
+          setReciter={setReciter}
+        />
       )}
     </div>
   );
