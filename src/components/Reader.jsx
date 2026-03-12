@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 
 function Reader({ surah, setSurah }) {
@@ -6,18 +6,20 @@ function Reader({ surah, setSurah }) {
   const [audioInfo, setAudioInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [playingIndex, setPlayingIndex] = useState(null);
-  const [audioObj, setAudioObj] = useState(null);
+
+  const audioRef = useRef(null);
 
   useEffect(() => {
     if (!surah) return;
+
     setLoading(true);
 
+    // Fetch verses
     axios
       .get(`https://quranapi.pages.dev/api/${surah}.json`)
       .then((res) => {
         const data = res.data;
 
-        // optionally remove Bismillah except Surah 1
         const ayahs = data.arabic1.map((text, i) => ({
           verse_number: i + 1,
           text_uthmani:
@@ -35,6 +37,7 @@ function Reader({ surah, setSurah }) {
         setLoading(false);
       });
 
+    // Fetch audio
     axios
       .get(`https://quranapi.pages.dev/api/audio/${surah}.json`)
       .then((res) => {
@@ -42,8 +45,12 @@ function Reader({ surah, setSurah }) {
       })
       .catch((err) => console.error("Error fetching audio:", err));
 
+    // cleanup when surah changes
     return () => {
-      if (audioObj) audioObj.pause();
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
     };
   }, [surah]);
 
@@ -54,14 +61,25 @@ function Reader({ surah, setSurah }) {
     const mp3 = reciter?.originalUrl;
     if (!mp3) return;
 
-    if (audioObj) audioObj.pause();
+    // stop previous audio
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
 
     const audio = new Audio(mp3);
+    audioRef.current = audio;
+
     audio.play();
-    setAudioObj(audio);
     setPlayingIndex(index);
 
     audio.onended = () => setPlayingIndex(null);
+  };
+
+  const pauseAudio = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      setPlayingIndex(null);
+    }
   };
 
   if (loading) return <p>Loading Surah...</p>;
@@ -86,7 +104,7 @@ function Reader({ surah, setSurah }) {
 
             <button
               onClick={() =>
-                playingIndex === index ? audioObj?.pause() : playAudio(index)
+                playingIndex === index ? pauseAudio() : playAudio(index)
               }
             >
               {playingIndex === index ? "Pause Audio" : "Play Audio"}
