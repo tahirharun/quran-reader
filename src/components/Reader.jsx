@@ -13,8 +13,7 @@ function Reader({ surah, setSurah }) {
     if (!surah) return;
 
     setLoading(true);
-
-    // Fetch verses
+    
     axios
       .get(`https://quranapi.pages.dev/api/${surah}.json`)
       .then((res) => {
