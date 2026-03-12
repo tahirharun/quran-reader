@@ -45,7 +45,6 @@ function Reader({ surah, setSurah }) {
       })
       .catch((err) => console.error("Error fetching audio:", err));
 
-    // cleanup when surah changes
     return () => {
       if (audioRef.current) {
         audioRef.current.pause();
@@ -61,7 +60,6 @@ function Reader({ surah, setSurah }) {
     const mp3 = reciter?.originalUrl;
     if (!mp3) return;
 
-    // stop previous audio
     if (audioRef.current) {
       audioRef.current.pause();
     }
