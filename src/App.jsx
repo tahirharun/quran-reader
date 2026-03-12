@@ -17,7 +17,7 @@ function App() {
 
   return (
     <div className="app-container">
-      <h1 className="title">Qur'an App</h1>
+      <h1 className="title">Qur'an</h1>
 
       <button className="dark-toggle" onClick={() => setDark(!dark)}>
         {dark ? "Light Mode" : "Night Mode"}
