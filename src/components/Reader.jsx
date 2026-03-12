@@ -37,7 +37,6 @@ function Reader({ surah, setSurah }) {
         setLoading(false);
       });
 
-    // Fetch audio
     axios
       .get(`https://quranapi.pages.dev/api/audio/${surah}.json`)
       .then((res) => {
