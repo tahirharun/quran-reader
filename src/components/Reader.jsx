@@ -1,12 +1,11 @@
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 
-/* RECITER AUDIO FOLDERS (EveryAyah) */
 const RECITER_AUDIO = {
   "1": "Alafasy_128kbps",
   "2": "Abdul_Basit_Mujawwad_128kbps",
   "3": "Ghamadi_40kbps",
-  "4": "Abdurrahmaan_As-Sudais_192kbps", // fixed Sudais
+  "4": "Abdurrahmaan_As-Sudais_192kbps",
 };
 
 function Reader({ surah, setSurah, reciter }) {
@@ -16,7 +15,6 @@ function Reader({ surah, setSurah, reciter }) {
 
   const audioRef = useRef(null);
 
-  /* LOAD SURAH */
   useEffect(() => {
     if (!surah) return;
 
@@ -56,7 +54,6 @@ function Reader({ surah, setSurah, reciter }) {
     };
   }, [surah]);
 
-  /* AUTO SCROLL */
   useEffect(() => {
     if (playingIndex !== null) {
       const el = document.getElementById(`ayah-${playingIndex}`);
@@ -69,7 +66,6 @@ function Reader({ surah, setSurah, reciter }) {
     }
   }, [playingIndex]);
 
-  /* PLAY AUDIO */
   const playAudio = (index) => {
     if (audioRef.current) {
       audioRef.current.pause();
@@ -101,7 +97,6 @@ function Reader({ surah, setSurah, reciter }) {
     };
   };
 
-  /* PAUSE AUDIO */
   const pauseAudio = () => {
     if (audioRef.current) {
       audioRef.current.pause();
