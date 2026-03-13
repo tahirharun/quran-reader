@@ -1,9 +1,8 @@
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 
-function Reader({ surah, setSurah, reciter }) {
+function Reader({ surah, setSurah }) {
   const [verses, setVerses] = useState([]);
-  const [audioInfo, setAudioInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [playingIndex, setPlayingIndex] = useState(null);
 
@@ -16,27 +15,24 @@ function Reader({ surah, setSurah, reciter }) {
 
     const loadSurah = async () => {
       try {
-        const res = await axios.get(`https://quranapi.pages.dev/api/${surah}.json`);
-        const data = res.data;
+        const res = await axios.get(
+          `https://quranapi.pages.dev/api/${surah}.json`
+        );
 
-        if (!data || !data.arabic1) throw new Error("Invalid surah data");
+        const data = res.data;
 
         const ayahs = data.arabic1.map((text, i) => ({
           verse_number: i + 1,
-          text_uthmani: surah !== 1 ? text.replace(/^بسم الله الرحمن الرحيم\s*/, "") : text,
-          translation: data.english[i] || ""
+          text_uthmani:
+            surah !== 1
+              ? text.replace(/^بسم الله الرحمن الرحيم\s*/, "")
+              : text,
+          translation: data.english[i] || "",
         }));
 
         setVerses(ayahs);
       } catch (err) {
-        console.error("Surah fetch error:", err);
-      }
-
-      try {
-        const audioRes = await axios.get(`https://quranapi.pages.dev/api/audio/${surah}.json`);
-        setAudioInfo(audioRes.data);
-      } catch (err) {
-        console.error("Audio fetch error:", err);
+        console.error("Error loading surah:", err);
       }
 
       setLoading(false);
@@ -47,32 +43,51 @@ function Reader({ surah, setSurah, reciter }) {
     return () => {
       if (audioRef.current) {
         audioRef.current.pause();
-        audioRef.current = null;
       }
     };
   }, [surah]);
 
+  /* AUTO SCROLL */
+  useEffect(() => {
+    if (playingIndex !== null) {
+      const el = document.getElementById(`ayah-${playingIndex}`);
+      if (el) {
+        el.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }
+    }
+  }, [playingIndex]);
+
+  /* PLAY AYAH AUDIO */
   const playAudio = (index) => {
-    if (!audioInfo) return;
-
-    const reciterData = audioInfo[reciter];
-
-    if (!reciterData || !reciterData.originalUrl) {
-      alert("Audio not available for this reciter.");
-      return;
+    if (audioRef.current) {
+      audioRef.current.pause();
     }
 
-    const mp3 = reciterData.originalUrl;
+    const ayahNumber = index + 1;
 
-    if (audioRef.current) audioRef.current.pause();
+    const surahStr = String(surah).padStart(3, "0");
+    const ayahStr = String(ayahNumber).padStart(3, "0");
 
-    const audio = new Audio(mp3);
+    const audioUrl = `https://everyayah.com/data/Alafasy_128kbps/${surahStr}${ayahStr}.mp3`;
+
+    const audio = new Audio(audioUrl);
+
     audioRef.current = audio;
 
-    audio.play();
     setPlayingIndex(index);
 
-    audio.onended = () => setPlayingIndex(null);
+    audio.play();
+
+    audio.onended = () => {
+      if (index + 1 < verses.length) {
+        playAudio(index + 1);
+      } else {
+        setPlayingIndex(null);
+      }
+    };
   };
 
   const pauseAudio = () => {
@@ -83,7 +98,6 @@ function Reader({ surah, setSurah, reciter }) {
   };
 
   if (loading) return <p>Loading Surah...</p>;
-  if (!verses.length) return <p>Failed to load surah.</p>;
 
   return (
     <div className="reader-container">
@@ -95,14 +109,27 @@ function Reader({ surah, setSurah, reciter }) {
 
       <div className="verses">
         {verses.map((v, index) => (
-          <div key={index} className="verse">
+          <div
+            key={index}
+            id={`ayah-${index}`}
+            className={`verse ${
+              playingIndex === index ? "active-ayah" : ""
+            }`}
+          >
             <p className="arabic">
-              {v.text_uthmani} <span className="ayah-number">{v.verse_number}</span>
+              {v.text_uthmani}{" "}
+              <span className="ayah-number">{v.verse_number}</span>
             </p>
 
             <p className="translation">{v.translation}</p>
 
-            <button onClick={() => playingIndex === index ? pauseAudio() : playAudio(index)}>
+            <button
+              onClick={() =>
+                playingIndex === index
+                  ? pauseAudio()
+                  : playAudio(index)
+              }
+            >
               {playingIndex === index ? "Pause Audio" : "Play Audio"}
             </button>
           </div>
