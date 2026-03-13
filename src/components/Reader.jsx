@@ -1,13 +1,22 @@
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 
-function Reader({ surah, setSurah }) {
+/* RECITER AUDIO FOLDERS (EveryAyah) */
+const RECITER_AUDIO = {
+  "1": "Alafasy_128kbps",
+  "2": "Abdul_Basit_Mujawwad_128kbps",
+  "3": "Ghamadi_40kbps",
+  "4": "Abdurrahmaan_As-Sudais_192kbps", // fixed Sudais
+};
+
+function Reader({ surah, setSurah, reciter }) {
   const [verses, setVerses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [playingIndex, setPlayingIndex] = useState(null);
 
   const audioRef = useRef(null);
 
+  /* LOAD SURAH */
   useEffect(() => {
     if (!surah) return;
 
@@ -60,7 +69,7 @@ function Reader({ surah, setSurah }) {
     }
   }, [playingIndex]);
 
-  /* PLAY AYAH AUDIO */
+  /* PLAY AUDIO */
   const playAudio = (index) => {
     if (audioRef.current) {
       audioRef.current.pause();
@@ -71,7 +80,9 @@ function Reader({ surah, setSurah }) {
     const surahStr = String(surah).padStart(3, "0");
     const ayahStr = String(ayahNumber).padStart(3, "0");
 
-    const audioUrl = `https://everyayah.com/data/Alafasy_128kbps/${surahStr}${ayahStr}.mp3`;
+    const reciterFolder = RECITER_AUDIO[reciter] || "Alafasy_128kbps";
+
+    const audioUrl = `https://everyayah.com/data/${reciterFolder}/${surahStr}${ayahStr}.mp3`;
 
     const audio = new Audio(audioUrl);
 
@@ -90,6 +101,7 @@ function Reader({ surah, setSurah }) {
     };
   };
 
+  /* PAUSE AUDIO */
   const pauseAudio = () => {
     if (audioRef.current) {
       audioRef.current.pause();
