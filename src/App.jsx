@@ -15,7 +15,6 @@ function App() {
     return localStorage.getItem("reciter") || "1";
   });
 
-  // Persist settings
   useEffect(() => {
     localStorage.setItem("reciter", reciter);
   }, [reciter]);
@@ -24,7 +23,6 @@ function App() {
     localStorage.setItem("learningMode", JSON.stringify(learningMode));
   }, [learningMode]);
 
-  // Dark mode toggle
   useEffect(() => {
     if (dark) {
       document.body.classList.add("dark");

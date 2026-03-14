@@ -62,7 +62,7 @@ function Reader({ surah, setSurah, reciter, learningMode }) {
     const audioUrl = `https://everyayah.com/data/${reciterFolder}/${surahStr}${ayahStr}.mp3`;
 
     const audio = new Audio(audioUrl);
-    audio.playbackRate = learningMode ? 0.8 : 1; // Slow down in Learning Mode
+    audio.playbackRate = learningMode ? 0.8 : 1; 
     audioRef.current = audio;
     setPlayingIndex(index);
     audio.play();
@@ -97,18 +97,15 @@ function Reader({ surah, setSurah, reciter, learningMode }) {
             id={`ayah-${index}`}
             className={`verse ${playingIndex === index ? "active-ayah" : ""}`}
           >
-            {/* Arabic */}
             <p className="arabic">
               {v.text_uthmani}{" "}
               <span className="ayah-number">{v.verse_number}</span>
             </p>
 
-            {/* English translation always visible */}
             <p className="translation" style={{ marginTop: "6px" }}>
               {v.translation}
             </p>
 
-            {/* Learning Mode: Tafsir only */}
             {learningMode && (
               <div
                 className="tafsir"
@@ -118,7 +115,6 @@ function Reader({ surah, setSurah, reciter, learningMode }) {
               </div>
             )}
 
-            {/* Audio controls */}
             <button
               onClick={() =>
                 playingIndex === index ? pauseAudio() : playAudio(index)
