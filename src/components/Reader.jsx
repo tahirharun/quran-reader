@@ -8,7 +8,6 @@ const RECITER_AUDIO = {
   "4": "Abdurrahmaan_As-Sudais_192kbps",
 };
 
-// Basic transliteration helper
 const simpleTransliteration = (text) => {
   return text
     .replace(/بسم/g, "Bism")
@@ -25,10 +24,9 @@ function Reader({ surah, setSurah, reciter, learningMode }) {
   const [loading, setLoading] = useState(true);
   const [playingIndex, setPlayingIndex] = useState(null);
   const [speed, setSpeed] = useState(0.8);
-  const [volume, setVolume] = useState(1); // volume control 0 - 1
+  const [volume, setVolume] = useState(1);
   const audioRef = useRef(null);
 
-  // Load Surah
   useEffect(() => {
     if (!surah) return;
     setLoading(true);
@@ -70,7 +68,6 @@ function Reader({ surah, setSurah, reciter, learningMode }) {
     };
   }, [surah]);
 
-  // Scroll to active ayah
   useEffect(() => {
     if (playingIndex !== null) {
       const el = document.getElementById(`ayah-${playingIndex}`);
@@ -78,7 +75,6 @@ function Reader({ surah, setSurah, reciter, learningMode }) {
     }
   }, [playingIndex]);
 
-  // Update audio volume
   useEffect(() => {
     if (audioRef.current) audioRef.current.volume = volume;
   }, [volume]);
@@ -126,9 +122,7 @@ function Reader({ surah, setSurah, reciter, learningMode }) {
 
       <h2 className="surah-title">Surah {surah}</h2>
 
-      {/* Audio Controls */}
       <div style={{ marginBottom: "12px", display: "flex", gap: "20px", flexWrap: "wrap" }}>
-        {/* Volume (Always visible) */}
         <label>
           Volume: {(volume * 100).toFixed(0)}%
           <input
@@ -142,7 +136,6 @@ function Reader({ surah, setSurah, reciter, learningMode }) {
           />
         </label>
 
-        {/* Speed (Learning mode only) */}
         {learningMode && (
           <label>
             Audio Speed: {speed.toFixed(2)}x
