@@ -8,7 +8,7 @@ const RECITER_AUDIO = {
   "4": "Abdurrahmaan_As-Sudais_192kbps",
 };
 
-// Basic transliteration helper (expandable)
+// Basic transliteration helper
 const simpleTransliteration = (text) => {
   return text
     .replace(/بسم/g, "Bism")
@@ -24,9 +24,11 @@ function Reader({ surah, setSurah, reciter, learningMode }) {
   const [verses, setVerses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [playingIndex, setPlayingIndex] = useState(null);
-  const [speed, setSpeed] = useState(0.8); // default for learning mode
+  const [speed, setSpeed] = useState(0.8);
+  const [volume, setVolume] = useState(1); // volume control 0 - 1
   const audioRef = useRef(null);
 
+  // Load Surah
   useEffect(() => {
     if (!surah) return;
     setLoading(true);
@@ -68,12 +70,18 @@ function Reader({ surah, setSurah, reciter, learningMode }) {
     };
   }, [surah]);
 
+  // Scroll to active ayah
   useEffect(() => {
     if (playingIndex !== null) {
       const el = document.getElementById(`ayah-${playingIndex}`);
       if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
     }
   }, [playingIndex]);
+
+  // Update audio volume
+  useEffect(() => {
+    if (audioRef.current) audioRef.current.volume = volume;
+  }, [volume]);
 
   const playAudio = (index) => {
     if (audioRef.current) audioRef.current.pause();
@@ -86,6 +94,7 @@ function Reader({ surah, setSurah, reciter, learningMode }) {
 
     const audio = new Audio(audioUrl);
     audio.playbackRate = learningMode ? speed : 1;
+    audio.volume = volume;
     audioRef.current = audio;
     setPlayingIndex(index);
     audio.play();
@@ -103,6 +112,10 @@ function Reader({ surah, setSurah, reciter, learningMode }) {
     }
   };
 
+  const playFullSurah = () => {
+    playAudio(0);
+  };
+
   if (loading) return <p>Loading Surah...</p>;
 
   return (
@@ -113,8 +126,24 @@ function Reader({ surah, setSurah, reciter, learningMode }) {
 
       <h2 className="surah-title">Surah {surah}</h2>
 
-      {learningMode && (
-        <div style={{ marginBottom: "12px" }}>
+      {/* Audio Controls */}
+      <div style={{ marginBottom: "12px", display: "flex", gap: "20px", flexWrap: "wrap" }}>
+        {/* Volume (Always visible) */}
+        <label>
+          Volume: {(volume * 100).toFixed(0)}%
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.05"
+            value={volume}
+            onChange={(e) => setVolume(parseFloat(e.target.value))}
+            style={{ marginLeft: "8px" }}
+          />
+        </label>
+
+        {/* Speed (Learning mode only) */}
+        {learningMode && (
           <label>
             Audio Speed: {speed.toFixed(2)}x
             <input
@@ -127,8 +156,10 @@ function Reader({ surah, setSurah, reciter, learningMode }) {
               style={{ marginLeft: "8px" }}
             />
           </label>
-        </div>
-      )}
+        )}
+
+        <button onClick={playFullSurah}>▶ Play Full Surah</button>
+      </div>
 
       <div className="verses">
         {verses.map((v, index) => (
@@ -138,34 +169,27 @@ function Reader({ surah, setSurah, reciter, learningMode }) {
             className={`verse ${playingIndex === index ? "active-ayah" : ""}`}
           >
             <p className="arabic">
-              {v.text_uthmani}{" "}
-              <span className="ayah-number">{v.verse_number}</span>
+              {v.text_uthmani} <span className="ayah-number">{v.verse_number}</span>
             </p>
 
-            {/* Full verse transliteration */}
             {learningMode && (
               <p className="translation-inline" style={{ color: "#2196f3", fontWeight: 500 }}>
                 {v.transliteration}
               </p>
             )}
 
-            {/* Word-by-word transliteration */}
             {learningMode && (
               <div className="word-pronunciation" style={{ marginTop: "6px", fontSize: "14px" }}>
                 {v.text_uthmani.split(" ").map((word, i) => (
                   <span key={i} style={{ display: "inline-block", margin: "0 4px", textAlign: "center" }}>
                     <div>{word}</div>
-                    <div style={{ color: "#2196f3", fontSize: "12px" }}>
-                      {v.transliterationWords[i]}
-                    </div>
+                    <div style={{ color: "#2196f3", fontSize: "12px" }}>{v.transliterationWords[i]}</div>
                   </span>
                 ))}
               </div>
             )}
 
-            <p className="translation" style={{ marginTop: "6px" }}>
-              {v.translation}
-            </p>
+            <p className="translation" style={{ marginTop: "6px" }}>{v.translation}</p>
 
             {learningMode && (
               <div className="tafsir" style={{ marginTop: "6px", fontSize: "14px", color: "#555" }}>
@@ -173,11 +197,7 @@ function Reader({ surah, setSurah, reciter, learningMode }) {
               </div>
             )}
 
-            <button
-              onClick={() =>
-                playingIndex === index ? pauseAudio() : playAudio(index)
-              }
-            >
+            <button onClick={() => (playingIndex === index ? pauseAudio() : playAudio(index))}>
               {playingIndex === index ? "Pause Audio" : "Play Audio"}
             </button>
           </div>
