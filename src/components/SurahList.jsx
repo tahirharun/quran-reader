@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-function SurahList({ setSurah }) {
+function SurahList({ setSurah, learningMode }) {
   const [surahs, setSurahs] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -43,6 +43,19 @@ function SurahList({ setSurah }) {
             </div>
             <div className="surah-name-arabic">{s.name_arabic}</div>
             <small className="verses-count">{s.verses_count} verses</small>
+
+            {learningMode && (
+              <div
+                style={{
+                  marginTop: "8px",
+                  fontSize: "12px",
+                  color: "#4caf50",
+                  fontStyle: "italic",
+                }}
+              >
+                Tafsir: {s.tafsir || "Learn the meaning of this Surah"}
+              </div>
+            )}
           </div>
         ))}
       </div>

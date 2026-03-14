@@ -1,3 +1,4 @@
+/* Global styles */
 body {
   margin: 0;
   padding: 0;
@@ -6,11 +7,13 @@ body {
   color: #222;
   transition: background 0.3s, color 0.3s;
 }
+
 .app-container {
   max-width: 900px;
   margin: auto;
   padding: 20px;
 }
+
 .title {
   text-align: center;
   margin-bottom: 20px;
@@ -18,6 +21,8 @@ body {
   font-weight: bold;
   color: #2c3e50;
 }
+
+/* Buttons */
 button {
   padding: 8px 14px;
   border: none;
@@ -28,16 +33,22 @@ button {
   margin-bottom: 20px;
   transition: background 0.3s, transform 0.2s;
 }
+
 button:hover {
   background: #43a047;
   transform: translateY(-2px);
 }
+
+/* Reader container */
 .reader-container {
   margin-top: 20px;
 }
+
 .back-button {
   margin-bottom: 20px;
 }
+
+/* Surah title */
 .surah-title {
   text-align: center;
   margin-bottom: 20px;
@@ -45,11 +56,14 @@ button:hover {
   font-weight: bold;
   color: #2c3e50;
 }
+
+/* Verses */
 .verses {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
+
 .verse {
   background: white;
   padding: 20px;
@@ -58,16 +72,20 @@ button:hover {
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
   transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
 }
+
 .verse:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
+
 .active-ayah {
   background: #fff9c4;
   border-left: 6px solid #ffb300;
   transform: scale(1.02);
   box-shadow: 0 6px 18px rgba(0,0,0,0.15);
 }
+
+/* Arabic text */
 .arabic {
   font-size: 32px;
   text-align: right;
@@ -77,6 +95,7 @@ button:hover {
   margin-bottom: 12px;
   display: inline-block;
 }
+
 .ayah-number {
   display: inline-block;
   width: 28px;
@@ -91,15 +110,38 @@ button:hover {
   margin-left: 8px;
   vertical-align: middle;
 }
+
+/* Translation */
 .translation {
   font-size: 16px;
   color: #444;
   line-height: 1.6;
   margin-bottom: 10px;
 }
+
+/* Optional Learning Mode: Inline English */
+.translation-inline {
+  display: block;
+  text-align: right; /* same as Arabic */
+  line-height: 1.8;
+  color: #2196f3; /* blue for English inline */
+  font-size: 16px;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+/* Tafsir */
+.tafsir {
+  font-size: 14px;
+  color: #555;
+  margin-top: 4px;
+}
+
+/* Surah List */
 .surah-list-container {
   margin-top: 20px;
 }
+
 .surah-list-title {
   text-align: center;
   margin-bottom: 20px;
@@ -107,6 +149,7 @@ button:hover {
   font-weight: bold;
   color: #2c3e50;
 }
+
 .surah-search {
   width: 100%;
   padding: 10px 14px;
@@ -117,15 +160,19 @@ button:hover {
   outline: none;
   transition: border 0.2s, box-shadow 0.2s;
 }
+
 .surah-search:focus {
   border-color: #4caf50;
   box-shadow: 0 0 5px rgba(76,175,80,0.5);
 }
+
+/* Surah cards */
 .surah-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px,1fr));
   gap: 16px;
 }
+
 .surah-card {
   position: relative;
   background: white;
@@ -141,10 +188,12 @@ button:hover {
   overflow: hidden;
   transition: transform 0.2s, box-shadow 0.2s;
 }
+
 .surah-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
+
 .surah-card::before {
   content: "";
   position: absolute;
@@ -154,19 +203,23 @@ button:hover {
   transition: opacity 0.4s;
   border-radius: 12px;
 }
+
 .surah-card:hover::before {
   opacity: 0.15;
 }
+
 .surah-card > * {
   position: relative;
   z-index: 1;
 }
+
 .surah-card-header {
   display: flex;
   align-items: center;
   gap: 6px;
   margin-bottom: 6px;
 }
+
 .surah-number {
   background: #4caf50;
   color: white;
@@ -176,21 +229,26 @@ button:hover {
   border-radius: 50%;
   font-weight: bold;
 }
+
 .surah-name {
   font-size: 18px;
   font-weight: 600;
   color: #2c3e50;
 }
+
 .surah-name-arabic {
   font-size: 20px;
   color: #555;
   font-family: "Amiri", "Scheherazade", serif;
   margin-bottom: 4px;
 }
+
 .verses-count {
   font-size: 14px;
   color: #888;
 }
+
+/* Dark Mode */
 body.dark {
   background: #121212;
   color: #f4f6f8;
@@ -200,17 +258,21 @@ body.dark .verse {
   background: #1e1e1e;
   border-left: 5px solid #43a047;
 }
+
 body.dark .active-ayah {
   background: #2a2a2a;
   border-left: 6px solid #ffb300;
 }
+
 body.dark .translation {
   color: #ddd;
 }
+
 body.dark .surah-card {
   background: #1e1e1e;
   border: 1px solid #333;
 }
+
 body.dark .surah-card::before {
   background: #43a047;
 }
@@ -218,25 +280,31 @@ body.dark .surah-card::before {
 body.dark .surah-number {
   background: #43a047;
 }
+
 body.dark .surah-name,
 body.dark .surah-name-arabic {
   color: #f4f6f8;
 }
+
 body.dark .verses-count {
   color: #aaa;
 }
+
 body.dark .surah-search {
   background: #1e1e1e;
   color: #f4f6f8;
   border: 1px solid #555;
 }
+
 body.dark .surah-search:focus {
   border-color: #43a047;
   box-shadow: 0 0 5px rgba(67,160,71,0.5);
 }
+
 body.dark button {
   background: #43a047;
 }
+
 body.dark button:hover {
   background: #4caf50;
 }
