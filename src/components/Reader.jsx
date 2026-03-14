@@ -8,10 +8,23 @@ const RECITER_AUDIO = {
   "4": "Abdurrahmaan_As-Sudais_192kbps",
 };
 
+// Basic transliteration helper (expandable)
+const simpleTransliteration = (text) => {
+  return text
+    .replace(/بسم/g, "Bism")
+    .replace(/الله/g, "Allāh")
+    .replace(/الرحمن/g, "ar-Raḥmān")
+    .replace(/الرحيم/g, "ar-Raḥīm")
+    .replace(/محمد/g, "Muhammad")
+    .replace(/\s+/g, " ")
+    .trim();
+};
+
 function Reader({ surah, setSurah, reciter, learningMode }) {
   const [verses, setVerses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [playingIndex, setPlayingIndex] = useState(null);
+  const [speed, setSpeed] = useState(0.8); // default for learning mode
   const audioRef = useRef(null);
 
   useEffect(() => {
@@ -23,12 +36,23 @@ function Reader({ surah, setSurah, reciter, learningMode }) {
         const res = await axios.get(`https://quranapi.pages.dev/api/${surah}.json`);
         const data = res.data;
 
-        const ayahs = data.arabic1.map((text, i) => ({
-          verse_number: i + 1,
-          text_uthmani: surah !== 1 ? text.replace(/^بسم الله الرحمن الرحيم\s*/, "") : text,
-          translation: data.english[i] || "Translation unavailable",
-          tafsir: data.tafsir ? data.tafsir[i] : "Tafsir for this verse",
-        }));
+        const ayahs = data.arabic1.map((text, i) => {
+          const text_clean = surah !== 1
+            ? text.replace(/^بسم الله الرحمن الرحيم\s*/, "")
+            : text;
+
+          const transliteration = simpleTransliteration(text_clean);
+          const transliterationWords = text_clean.split(" ").map(simpleTransliteration);
+
+          return {
+            verse_number: i + 1,
+            text_uthmani: text_clean,
+            translation: data.english[i] || "Translation unavailable",
+            tafsir: data.tafsir ? data.tafsir[i] : "Tafsir unavailable",
+            transliteration,
+            transliterationWords,
+          };
+        });
 
         setVerses(ayahs);
       } catch (err) {
@@ -57,12 +81,11 @@ function Reader({ surah, setSurah, reciter, learningMode }) {
     const ayahNumber = index + 1;
     const surahStr = String(surah).padStart(3, "0");
     const ayahStr = String(ayahNumber).padStart(3, "0");
-
     const reciterFolder = RECITER_AUDIO[reciter];
     const audioUrl = `https://everyayah.com/data/${reciterFolder}/${surahStr}${ayahStr}.mp3`;
 
     const audio = new Audio(audioUrl);
-    audio.playbackRate = learningMode ? 0.8 : 1; 
+    audio.playbackRate = learningMode ? speed : 1;
     audioRef.current = audio;
     setPlayingIndex(index);
     audio.play();
@@ -90,6 +113,23 @@ function Reader({ surah, setSurah, reciter, learningMode }) {
 
       <h2 className="surah-title">Surah {surah}</h2>
 
+      {learningMode && (
+        <div style={{ marginBottom: "12px" }}>
+          <label>
+            Audio Speed: {speed.toFixed(2)}x
+            <input
+              type="range"
+              min="0.5"
+              max="1.2"
+              step="0.05"
+              value={speed}
+              onChange={(e) => setSpeed(parseFloat(e.target.value))}
+              style={{ marginLeft: "8px" }}
+            />
+          </label>
+        </div>
+      )}
+
       <div className="verses">
         {verses.map((v, index) => (
           <div
@@ -102,15 +142,33 @@ function Reader({ surah, setSurah, reciter, learningMode }) {
               <span className="ayah-number">{v.verse_number}</span>
             </p>
 
+            {/* Full verse transliteration */}
+            {learningMode && (
+              <p className="translation-inline" style={{ color: "#2196f3", fontWeight: 500 }}>
+                {v.transliteration}
+              </p>
+            )}
+
+            {/* Word-by-word transliteration */}
+            {learningMode && (
+              <div className="word-pronunciation" style={{ marginTop: "6px", fontSize: "14px" }}>
+                {v.text_uthmani.split(" ").map((word, i) => (
+                  <span key={i} style={{ display: "inline-block", margin: "0 4px", textAlign: "center" }}>
+                    <div>{word}</div>
+                    <div style={{ color: "#2196f3", fontSize: "12px" }}>
+                      {v.transliterationWords[i]}
+                    </div>
+                  </span>
+                ))}
+              </div>
+            )}
+
             <p className="translation" style={{ marginTop: "6px" }}>
               {v.translation}
             </p>
 
             {learningMode && (
-              <div
-                className="tafsir"
-                style={{ marginTop: "6px", fontSize: "14px", color: "#555" }}
-              >
+              <div className="tafsir" style={{ marginTop: "6px", fontSize: "14px", color: "#555" }}>
                 {v.tafsir}
               </div>
             )}
