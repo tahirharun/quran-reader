@@ -8,13 +8,11 @@ function App() {
   const [surah, setSurah] = useState(null);
   const [dark, setDark] = useState(false);
 
-  // Global reciter with localStorage
   const [reciter, setReciter] = useState(() => {
     return localStorage.getItem("reciter") || "1";
   });
 
   useEffect(() => {
-    // Save selection to localStorage
     localStorage.setItem("reciter", reciter);
   }, [reciter]);
 
@@ -34,7 +32,6 @@ function App() {
         {dark ? "Light Mode" : "Night Mode"}
       </button>
 
-      {/* Reciter selection */}
       <ReciterProfile reciter={reciter} setReciter={setReciter} />
 
       {!surah ? (
