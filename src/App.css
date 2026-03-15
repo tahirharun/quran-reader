@@ -56,17 +56,25 @@ button:hover {
   border-radius: 12px;
   border-left: 5px solid #4caf50;
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-  transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
+  transition: transform 0.2s, box-shadow 0.2s, background 0.3s, border-left 0.3s;
 }
 .verse:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
-.active-ayah {
+.verse.active-ayah {
   background: #fff9c4;
-  border-left: 6px solid #ffb300;
+  border-left: 6px solid #ffb300; 
   transform: scale(1.02);
   box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+}
+.verse.bookmarked-ayah {
+  background-color: #e3f2fd;
+  border-left: 6px solid #2196f3;
+}
+.verse.active-ayah.bookmarked-ayah {
+  background: #fff9c4;
+  border-left: 6px solid #ffb300;
 }
 .arabic {
   font-size: 32px;
@@ -216,6 +224,10 @@ body.dark .verse {
 body.dark .active-ayah {
   background: #2a2a2a;
   border-left: 6px solid #ffb300;
+}
+body.dark .verse.bookmarked-ayah {
+  background-color: #1e2a3a;
+  border-left: 6px solid #64b5f6;
 }
 body.dark .translation {
   color: #ddd;

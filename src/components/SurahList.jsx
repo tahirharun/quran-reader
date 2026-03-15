@@ -19,7 +19,7 @@ function SurahList({ setSurah, learningMode }) {
   );
 
   return (
-    <div className="surah-list-container">
+    <div className="surah-list-container" style={{ marginTop: "20px" }}>
       <h2 className="surah-list-title">Surah List</h2>
 
       <input
@@ -31,33 +31,57 @@ function SurahList({ setSurah, learningMode }) {
       />
 
       <div className="surah-grid">
-        {filteredSurahs.map((s) => (
-          <div
-            key={s.id}
-            className="surah-card"
-            onClick={() => setSurah(s.id)}
-          >
-            <div className="surah-card-header">
-              <span className="surah-number">{s.id}</span>
-              <strong className="surah-name">{s.name_simple}</strong>
-            </div>
-            <div className="surah-name-arabic">{s.name_arabic}</div>
-            <small className="verses-count">{s.verses_count} verses</small>
+        {filteredSurahs.map((s) => {
+          const hasBookmark = !!localStorage.getItem(`bookmark-surah-${s.id}`);
 
-            {learningMode && (
-              <div
-                style={{
-                  marginTop: "8px",
-                  fontSize: "12px",
-                  color: "#4caf50",
-                  fontStyle: "italic",
-                }}
-              >
-                Tafsir: {s.tafsir || "Learn the meaning of this Surah"}
+          return (
+            <div
+              key={s.id}
+              className="surah-card"
+              onClick={() => setSurah(s.id)}
+              style={{ position: "relative" }}
+            >
+              {hasBookmark && (
+                <span
+                  style={{
+                    position: "absolute",
+                    top: "8px",
+                    right: "8px",
+                    background: "#ffb300",
+                    color: "#fff",
+                    fontSize: "12px",
+                    fontWeight: "bold",
+                    padding: "2px 6px",
+                    borderRadius: "8px",
+                    zIndex: 10,
+                  }}
+                >
+                  🔖
+                </span>
+              )}
+
+              <div className="surah-card-header">
+                <span className="surah-number">{s.id}</span>
+                <strong className="surah-name">{s.name_simple}</strong>
               </div>
-            )}
-          </div>
-        ))}
+              <div className="surah-name-arabic">{s.name_arabic}</div>
+              <small className="verses-count">{s.verses_count} verses</small>
+
+              {learningMode && (
+                <div
+                  style={{
+                    marginTop: "8px",
+                    fontSize: "12px",
+                    color: "#4caf50",
+                    fontStyle: "italic",
+                  }}
+                >
+                  Tafsir: {s.tafsir || "Learn the meaning of this Surah"}
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
