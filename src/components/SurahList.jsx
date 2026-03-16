@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-function SurahList({ setSurah, learningMode }) {
+function SurahList({ setSurah, learningMode, readMode }) {
   const [surahs, setSurahs] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -61,13 +61,15 @@ function SurahList({ setSurah, learningMode }) {
               )}
 
               <div className="surah-card-header">
-                <span className="surah-number">{s.id}</span>
+                <span className={`surah-number ${readMode ? "readmode-number" : ""}`}>
+                  {s.id}
+                </span>
                 <strong className="surah-name">{s.name_simple}</strong>
               </div>
               <div className="surah-name-arabic">{s.name_arabic}</div>
               <small className="verses-count">{s.verses_count} verses</small>
 
-              {learningMode && (
+              {learningMode && !readMode && (
                 <div
                   style={{
                     marginTop: "8px",

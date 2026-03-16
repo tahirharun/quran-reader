@@ -264,3 +264,21 @@ body.dark button {
 body.dark button:hover {
   background: #4caf50;
 }
+.readmode-number {
+  border-radius: 0;
+  background-color: #ffb300;
+  color: #222;
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  border: 1px solid #444;
+  transition: all 0.3s;
+}
+body.dark .readmode-number {
+  background-color: #ffb300;
+  color: #121212;
+  border: 1px solid #ddd;
+}

@@ -19,7 +19,7 @@ const simpleTransliteration = (text) => {
     .trim();
 };
 
-function Reader({ surah, setSurah, reciter, learningMode }) {
+function Reader({ surah, setSurah, reciter, learningMode, readMode }) {
   const [verses, setVerses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [playingIndex, setPlayingIndex] = useState(null);
@@ -113,9 +113,7 @@ function Reader({ surah, setSurah, reciter, learningMode }) {
     }
   };
 
-  const playFullSurah = () => {
-    playAudio(0);
-  };
+  const playFullSurah = () => playAudio(0);
 
   const toggleBookmark = (index) => {
     if (bookmark === index) {
@@ -144,9 +142,7 @@ function Reader({ surah, setSurah, reciter, learningMode }) {
         </button>
 
         {bookmark !== null && (
-          <button onClick={goToBookmark}>
-            ↑ Go to Bookmark
-          </button>
+          <button onClick={goToBookmark}>↑ Go to Bookmark</button>
         )}
       </div>
 
@@ -166,7 +162,7 @@ function Reader({ surah, setSurah, reciter, learningMode }) {
           />
         </label>
 
-        {learningMode && (
+        {learningMode && !readMode && (
           <label>
             Audio Speed: {speed.toFixed(2)}x
             <input
@@ -194,32 +190,30 @@ function Reader({ surah, setSurah, reciter, learningMode }) {
               ${bookmark === index ? "bookmarked-ayah" : ""}`}
           >
             <p className="arabic">
-              {v.text_uthmani} <span className="ayah-number">{v.verse_number}</span>
+              {v.text_uthmani}{" "}
+              <span
+                className={`ayah-number ${readMode ? "readmode-number" : ""}`}
+              >
+                {v.verse_number}
+              </span>
             </p>
 
-            {learningMode && (
-              <p className="translation-inline" style={{ color: "#2196f3", fontWeight: 500 }}>
-                {v.transliteration}
-              </p>
-            )}
+            {!readMode && (
+              <>
+                {learningMode && (
+                  <p className="translation-inline" style={{ color: "#2196f3", fontWeight: 500 }}>
+                    {v.transliteration}
+                  </p>
+                )}
 
-            {learningMode && (
-              <div className="word-pronunciation" style={{ marginTop: "6px", fontSize: "14px" }}>
-                {v.text_uthmani.split(" ").map((word, i) => (
-                  <span key={i} style={{ display: "inline-block", margin: "0 4px", textAlign: "center" }}>
-                    <div>{word}</div>
-                    <div style={{ color: "#2196f3", fontSize: "12px" }}>{v.transliterationWords[i]}</div>
-                  </span>
-                ))}
-              </div>
-            )}
+                <p className="translation" style={{ marginTop: "6px" }}>{v.translation}</p>
 
-            <p className="translation" style={{ marginTop: "6px" }}>{v.translation}</p>
-
-            {learningMode && (
-              <div className="tafsir" style={{ marginTop: "6px", fontSize: "14px", color: "#555" }}>
-                {v.tafsir}
-              </div>
+                {learningMode && (
+                  <div className="tafsir" style={{ marginTop: "6px", fontSize: "14px", color: "#555" }}>
+                    {v.tafsir}
+                  </div>
+                )}
+              </>
             )}
 
             <div style={{ marginTop: "8px", display: "flex", gap: "8px", flexWrap: "wrap" }}>
