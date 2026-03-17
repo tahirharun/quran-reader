@@ -26,6 +26,11 @@ function App() {
     else document.body.classList.remove("dark");
   }, [dark]);
 
+  useEffect(() => {
+    if (readMode) document.body.classList.add("readmode");
+    else document.body.classList.remove("readmode");
+  }, [readMode]);
+
   return (
     <div className="app-container">
       <h1 className="title">Qur'an</h1>
@@ -39,17 +44,9 @@ function App() {
           marginBottom: "20px",
         }}
       >
-        <button onClick={() => setDark(!dark)}>
-          {dark ? "Light Mode" : "Night Mode"}
-        </button>
-
-        <button onClick={() => setLearningMode(!learningMode)}>
-          {learningMode ? "Normal Mode" : "Learning Mode"}
-        </button>
-
-        <button onClick={() => setReadMode(!readMode)}>
-          {readMode ? "Normal Mode" : "Read Mode"}
-        </button>
+        <button onClick={() => setDark(!dark)}>{dark ? "Light Mode" : "Night Mode"}</button>
+        <button onClick={() => setLearningMode(!learningMode)}>{learningMode ? "Normal Mode" : "Learning Mode"}</button>
+        <button onClick={() => setReadMode(!readMode)}>{readMode ? "Normal Mode" : "Read Mode"}</button>
       </div>
 
       <ReciterProfile reciter={reciter} setReciter={setReciter} />

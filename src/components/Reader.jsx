@@ -42,9 +42,8 @@ function Reader({ surah, setSurah, reciter, learningMode, readMode }) {
         const data = res.data;
 
         const ayahs = data.arabic1.map((text, i) => {
-          const text_clean = surah !== 1
-            ? text.replace(/^بسم الله الرحمن الرحيم\s*/, "")
-            : text;
+          const text_clean =
+            surah !== 1 ? text.replace(/^بسم الله الرحمن الرحيم\s*/, "") : text;
 
           const transliteration = simpleTransliteration(text_clean);
           const transliterationWords = text_clean.split(" ").map(simpleTransliteration);
@@ -94,8 +93,8 @@ function Reader({ surah, setSurah, reciter, learningMode, readMode }) {
     const audioUrl = `https://everyayah.com/data/${reciterFolder}/${surahStr}${ayahStr}.mp3`;
 
     const audio = new Audio(audioUrl);
-    audio.playbackRate = learningMode ? speed : 1;
     audio.volume = volume;
+    audio.playbackRate = learningMode && !readMode ? speed : 1;
     audioRef.current = audio;
     setPlayingIndex(index);
     audio.play();
@@ -136,44 +135,23 @@ function Reader({ surah, setSurah, reciter, learningMode, readMode }) {
 
   return (
     <div className="reader-container">
-      <div style={{ display: "flex", gap: "12px", marginBottom: "16px" }}>
-        <button className="back-button" onClick={() => setSurah(null)}>
-          ⬅ Back to Surah List
-        </button>
-
-        {bookmark !== null && (
-          <button onClick={goToBookmark}>↑ Go to Bookmark</button>
-        )}
+      <div style={{ display: "flex", gap: "12px", marginBottom: "16px", flexWrap: "wrap" }}>
+        <button className="back-button" onClick={() => setSurah(null)}>⬅ Back to Surah List</button>
+        {bookmark !== null && <button onClick={goToBookmark}>↑ Go to Bookmark</button>}
       </div>
 
       <h2 className="surah-title">Surah {surah}</h2>
 
-      <div style={{ marginBottom: "12px", display: "flex", gap: "20px", flexWrap: "wrap" }}>
+      <div style={{ display: "flex", gap: "20px", flexWrap: "wrap", marginBottom: "12px" }}>
         <label>
           Volume: {(volume * 100).toFixed(0)}%
-          <input
-            type="range"
-            min="0"
-            max="1"
-            step="0.05"
-            value={volume}
-            onChange={(e) => setVolume(parseFloat(e.target.value))}
-            style={{ marginLeft: "8px" }}
-          />
+          <input type="range" min="0" max="1" step="0.05" value={volume} onChange={(e) => setVolume(parseFloat(e.target.value))} style={{ marginLeft: "8px" }} />
         </label>
 
         {learningMode && !readMode && (
           <label>
             Audio Speed: {speed.toFixed(2)}x
-            <input
-              type="range"
-              min="0.5"
-              max="1.2"
-              step="0.05"
-              value={speed}
-              onChange={(e) => setSpeed(parseFloat(e.target.value))}
-              style={{ marginLeft: "8px" }}
-            />
+            <input type="range" min="0.5" max="1.2" step="0.05" value={speed} onChange={(e) => setSpeed(parseFloat(e.target.value))} style={{ marginLeft: "8px" }} />
           </label>
         )}
 
@@ -191,46 +169,22 @@ function Reader({ surah, setSurah, reciter, learningMode, readMode }) {
           >
             <p className="arabic">
               {v.text_uthmani}{" "}
-              <span
-                className={`ayah-number ${readMode ? "readmode-number" : ""}`}
-              >
-                {v.verse_number}
-              </span>
+              <span className={`ayah-number ${readMode ? "readmode-number" : ""}`}>{v.verse_number}</span>
             </p>
 
             {!readMode && (
               <>
-                {learningMode && (
-                  <p className="translation-inline" style={{ color: "#2196f3", fontWeight: 500 }}>
-                    {v.transliteration}
-                  </p>
-                )}
-
-                <p className="translation" style={{ marginTop: "6px" }}>{v.translation}</p>
-
-                {learningMode && (
-                  <div className="tafsir" style={{ marginTop: "6px", fontSize: "14px", color: "#555" }}>
-                    {v.tafsir}
-                  </div>
-                )}
+                {learningMode && <p className="translation-inline">{v.transliteration}</p>}
+                <p className="translation">{v.translation}</p>
+                {learningMode && <div className="tafsir">{v.tafsir}</div>}
               </>
             )}
 
-            <div style={{ marginTop: "8px", display: "flex", gap: "8px", flexWrap: "wrap" }}>
+            <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginTop: "6px" }}>
               <button onClick={() => (playingIndex === index ? pauseAudio() : playAudio(index))}>
                 {playingIndex === index ? "Pause Audio" : "Play Audio"}
               </button>
-
-              <button
-                onClick={() => toggleBookmark(index)}
-                style={{
-                  background: bookmark === index ? "#ffb300" : "#4caf50",
-                  color: "white",
-                  borderRadius: "6px",
-                  padding: "4px 8px",
-                  fontSize: "12px",
-                }}
-              >
+              <button onClick={() => toggleBookmark(index)} style={{ background: bookmark === index ? "#ffb300" : "#4caf50", color: "white", padding: "4px 8px", fontSize: "12px", borderRadius: "6px" }}>
                 {bookmark === index ? "Bookmarked" : "Bookmark"}
               </button>
             </div>

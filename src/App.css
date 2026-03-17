@@ -6,6 +6,10 @@ body {
   color: #222;
   transition: background 0.3s, color 0.3s;
 }
+body.dark {
+  background: #121212;
+  color: #f4f6f8;
+}
 .app-container {
   max-width: 900px;
   margin: auto;
@@ -25,99 +29,17 @@ button {
   color: white;
   border-radius: 6px;
   cursor: pointer;
-  margin-bottom: 20px;
-  transition: background 0.3s, transform 0.2s;
+  transition: all 0.2s;
 }
 button:hover {
   background: #43a047;
   transform: translateY(-2px);
 }
-.reader-container {
-  margin-top: 20px;
+body.dark button {
+  background: #43a047;
 }
-.back-button {
-  margin-bottom: 20px;
-}
-.surah-title {
-  text-align: center;
-  margin-bottom: 20px;
-  font-size: 24px;
-  font-weight: bold;
-  color: #2c3e50;
-}
-.verses {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-.verse {
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  border-left: 5px solid #4caf50;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-  transition: transform 0.2s, box-shadow 0.2s, background 0.3s, border-left 0.3s;
-}
-.verse:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-.verse.active-ayah {
-  background: #fff9c4;
-  border-left: 6px solid #ffb300; 
-  transform: scale(1.02);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
-}
-.verse.bookmarked-ayah {
-  background-color: #e3f2fd;
-  border-left: 6px solid #2196f3;
-}
-.verse.active-ayah.bookmarked-ayah {
-  background: #fff9c4;
-  border-left: 6px solid #ffb300;
-}
-.arabic {
-  font-size: 32px;
-  text-align: right;
-  direction: rtl;
-  line-height: 2.2;
-  font-family: "Amiri", "Scheherazade", serif;
-  margin-bottom: 12px;
-  display: inline-block;
-}
-.ayah-number {
-  display: inline-block;
-  width: 28px;
-  height: 28px;
-  line-height: 28px;
-  text-align: center;
-  font-weight: bold;
-  font-size: 16px;
-  color: white;
-  background-color: #4caf50;
-  border-radius: 50%;
-  margin-left: 8px;
-  vertical-align: middle;
-}
-.translation {
-  font-size: 16px;
-  color: #444;
-  line-height: 1.6;
-  margin-bottom: 10px;
-}
-.translation-inline {
-  display: block;
-  text-align: right;
-  line-height: 1.8;
-  color: #2196f3;
-  font-size: 16px;
-  margin-bottom: 4px;
-  font-weight: 500;
-}
-.tafsir {
-  font-size: 14px;
-  color: #555;
-  margin-top: 4px;
+body.dark button:hover {
+  background: #4caf50;
 }
 .surah-list-container {
   margin-top: 20px;
@@ -143,6 +65,15 @@ button:hover {
   border-color: #4caf50;
   box-shadow: 0 0 5px rgba(76,175,80,0.5);
 }
+body.dark .surah-search {
+  background: #1e1e1e;
+  color: #f4f6f8;
+  border: 1px solid #555;
+}
+body.dark .surah-search:focus {
+  border-color: #43a047;
+  box-shadow: 0 0 5px rgba(67,160,71,0.5);
+}
 .surah-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px,1fr));
@@ -153,41 +84,18 @@ button:hover {
   background: white;
   padding: 16px;
   border-radius: 12px;
-  border: 1px solid #e0e0e0;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   text-align: center;
-  overflow: hidden;
+  cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
+  border: 1px solid #e0e0e0;
 }
 .surah-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
-.surah-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: #4caf50;
-  opacity: 0;
-  transition: opacity 0.4s;
-  border-radius: 12px;
-}
-.surah-card:hover::before {
-  opacity: 0.15;
-}
-.surah-card > * {
-  position: relative;
-  z-index: 1;
-}
-.surah-card-header {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 6px;
+body.dark .surah-card {
+  background: #1e1e1e;
+  border: 1px solid #333;
 }
 .surah-number {
   background: #4caf50;
@@ -196,12 +104,18 @@ button:hover {
   height: 28px;
   line-height: 28px;
   border-radius: 50%;
-  font-weight: bold;
+  display: inline-block;
+}
+body.dark .surah-number {
+  background: #43a047;
 }
 .surah-name {
   font-size: 18px;
   font-weight: 600;
   color: #2c3e50;
+}
+body.dark .surah-name {
+  color: #f4f6f8;
 }
 .surah-name-arabic {
   font-size: 20px;
@@ -209,13 +123,76 @@ button:hover {
   font-family: "Amiri", "Scheherazade", serif;
   margin-bottom: 4px;
 }
+body.dark .surah-name-arabic {
+  color: #f4f6f8;
+}
 .verses-count {
   font-size: 14px;
   color: #888;
 }
-body.dark {
-  background: #121212;
-  color: #f4f6f8;
+body.dark .verses-count {
+  color: #aaa;
+}
+.verse {
+  background: white;
+  border-left: 5px solid #4caf50;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  transition: all 0.2s;
+}
+.verse:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.arabic {
+  font-size: 32px;
+  direction: rtl;
+  text-align: right;
+  line-height: 2.2;
+  font-family: "Amiri", "Scheherazade", serif;
+}
+.translation {
+  color: #444;
+  font-size: 16px;
+  margin-top: 6px;
+  line-height: 1.6;
+}
+.translation-inline {
+  color: #2196f3;
+  font-weight: 500;
+  font-size: 16px;
+}
+.tafsir {
+  font-size: 14px;
+  color: #555;
+  margin-top: 4px;
+}
+.active-ayah {
+  background: #fff9c4;
+  border-left: 6px solid #ffb300;
+}
+.bookmarked-ayah {
+  background-color: #e3f2fd;
+  border-left: 6px solid #2196f3;
+}
+.verse.active-ayah.bookmarked-ayah {
+  background: #fff9c4;
+  border-left: 6px solid #ffb300;
+}
+.ayah-number {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  line-height: 28px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 16px;
+  color: white;
+  background-color: #4caf50;
+  border-radius: 50%;
+  margin-left: 8px;
+  vertical-align: middle;
 }
 body.dark .verse {
   background: #1e1e1e;
@@ -232,53 +209,51 @@ body.dark .verse.bookmarked-ayah {
 body.dark .translation {
   color: #ddd;
 }
-body.dark .surah-card {
-  background: #1e1e1e;
-  border: 1px solid #333;
+body.readmode {
+  background: #f5f1e6;
+  color: #1b1b1b;
 }
-body.dark .surah-card::before {
+body.readmode .verse {
+  background: transparent;
+  border: none;
+  padding: 4px 0;
+  margin-bottom: 6px;
+}
+body.readmode .verse:hover {
+  transform: none;
+  box-shadow: none;
+}
+body.readmode .translation,
+body.readmode .translation-inline,
+body.readmode .tafsir {
+  display: none;
+}
+
+body.readmode .arabic {
+  font-size: 36px;
+  color: #1b1b1b;
+  line-height: 1.9;/
+}
+body.readmode .verse.active-ayah {
+  background: rgba(245,225,161,0.2);
+  border-left: 6px solid #c9a227;
+}
+body.dark.readmode {
+  background: #121212;
+  color: #f5e1a1;
+}
+body.dark.readmode .arabic {
+  color: #f5e1a1;
+}
+body.dark.readmode .verse.active-ayah {
+  background: rgba(67,160,71,0.2);
+  border-left: 6px solid #43a047;
+}
+body.readmode .ayah-number {
+  background: #c9a227;
+  color: white;
+}
+body.dark.readmode .ayah-number {
   background: #43a047;
-}
-body.dark .surah-number {
-  background: #43a047;
-}
-body.dark .surah-name,
-body.dark .surah-name-arabic {
-  color: #f4f6f8;
-}
-body.dark .verses-count {
-  color: #aaa;
-}
-body.dark .surah-search {
-  background: #1e1e1e;
-  color: #f4f6f8;
-  border: 1px solid #555;
-}
-body.dark .surah-search:focus {
-  border-color: #43a047;
-  box-shadow: 0 0 5px rgba(67,160,71,0.5);
-}
-body.dark button {
-  background: #43a047;
-}
-body.dark button:hover {
-  background: #4caf50;
-}
-.readmode-number {
-  border-radius: 0;
-  background-color: #ffb300;
-  color: #222;
-  width: 28px;
-  height: 28px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  border: 1px solid #444;
-  transition: all 0.3s;
-}
-body.dark .readmode-number {
-  background-color: #ffb300;
-  color: #121212;
-  border: 1px solid #ddd;
+  box-shadow: 0 0 8px #43a047aa;
 }
