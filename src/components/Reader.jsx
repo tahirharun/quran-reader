@@ -42,9 +42,7 @@ function Reader({ surah, setSurah, reciter, learningMode, readMode }) {
         const data = res.data;
 
         const ayahs = data.arabic1.map((text, i) => {
-          const text_clean =
-            surah !== 1 ? text.replace(/^بسم الله الرحمن الرحيم\s*/, "") : text;
-
+          const text_clean = surah !== 1 ? text.replace(/^بسم الله الرحمن الرحيم\s*/, "") : text;
           const transliteration = simpleTransliteration(text_clean);
           const transliterationWords = text_clean.split(" ").map(simpleTransliteration);
 
@@ -137,7 +135,15 @@ function Reader({ surah, setSurah, reciter, learningMode, readMode }) {
     <div className="reader-container">
       <div style={{ display: "flex", gap: "12px", marginBottom: "16px", flexWrap: "wrap" }}>
         <button className="back-button" onClick={() => setSurah(null)}>⬅ Back to Surah List</button>
-        {bookmark !== null && <button onClick={goToBookmark}>↑ Go to Bookmark</button>}
+
+        {bookmark !== null && (
+          <button
+            onClick={goToBookmark}
+            style={{ background: "#2196f3", color: "white", padding: "6px 12px", borderRadius: "6px" }}
+          >
+            ↑ Go to Bookmark
+          </button>
+        )}
       </div>
 
       <h2 className="surah-title">Surah {surah}</h2>
@@ -163,9 +169,7 @@ function Reader({ surah, setSurah, reciter, learningMode, readMode }) {
           <div
             key={index}
             id={`ayah-${index}`}
-            className={`verse 
-              ${playingIndex === index ? "active-ayah" : ""} 
-              ${bookmark === index ? "bookmarked-ayah" : ""}`}
+            className={`verse ${playingIndex === index ? "active-ayah" : ""} ${bookmark === index ? "bookmarked-ayah" : ""}`}
           >
             <p className="arabic">
               {v.text_uthmani}{" "}
@@ -184,7 +188,10 @@ function Reader({ surah, setSurah, reciter, learningMode, readMode }) {
               <button onClick={() => (playingIndex === index ? pauseAudio() : playAudio(index))}>
                 {playingIndex === index ? "Pause Audio" : "Play Audio"}
               </button>
-              <button onClick={() => toggleBookmark(index)} style={{ background: bookmark === index ? "#ffb300" : "#4caf50", color: "white", padding: "4px 8px", fontSize: "12px", borderRadius: "6px" }}>
+              <button
+                onClick={() => toggleBookmark(index)}
+                style={{ background: bookmark === index ? "#ffb300" : "#4caf50", color: "white", padding: "4px 8px", fontSize: "12px", borderRadius: "6px" }}
+              >
                 {bookmark === index ? "Bookmarked" : "Bookmark"}
               </button>
             </div>

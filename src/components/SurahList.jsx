@@ -18,6 +18,10 @@ function SurahList({ setSurah, learningMode, readMode }) {
       s.name_arabic.includes(searchTerm)
   );
 
+  const goToBookmarkSurah = (surahId) => {
+    setSurah(surahId);
+  };
+
   return (
     <div className="surah-list-container" style={{ marginTop: "20px" }}>
       <h2 className="surah-list-title">Surah List</h2>
@@ -32,16 +36,16 @@ function SurahList({ setSurah, learningMode, readMode }) {
 
       <div className="surah-grid">
         {filteredSurahs.map((s) => {
-          const hasBookmark = !!localStorage.getItem(`bookmark-surah-${s.id}`);
+          const bookmarkIndex = localStorage.getItem(`bookmark-surah-${s.id}`);
 
           return (
             <div
               key={s.id}
               className="surah-card"
-              onClick={() => setSurah(s.id)}
               style={{ position: "relative" }}
             >
-              {hasBookmark && (
+              {}
+              {bookmarkIndex !== null && (
                 <span
                   style={{
                     position: "absolute",
@@ -50,7 +54,6 @@ function SurahList({ setSurah, learningMode, readMode }) {
                     background: "#ffb300",
                     color: "#fff",
                     fontSize: "12px",
-                    fontWeight: "bold",
                     padding: "2px 6px",
                     borderRadius: "8px",
                     zIndex: 10,
@@ -60,12 +63,48 @@ function SurahList({ setSurah, learningMode, readMode }) {
                 </span>
               )}
 
-              <div className="surah-card-header">
+              {bookmarkIndex !== null && (
+                <button
+                  onClick={() => goToBookmarkSurah(s.id)}
+                  style={{
+                    position: "absolute",
+                    bottom: "8px",
+                    right: "8px",
+                    background: "#2196f3",
+                    color: "#fff",
+                    fontSize: "12px",
+                    padding: "4px 8px",
+                    borderRadius: "6px",
+                    cursor: "pointer",
+                    zIndex: 10,
+                    opacity: 0,
+                    transition: "opacity 0.3s",
+                  }}
+                  className="bookmark-button"
+                >
+                  Go to Bookmark
+                </button>
+              )}
+
+              <div
+                className="surah-card-header"
+                onClick={() => setSurah(s.id)}
+                style={{ cursor: "pointer" }}
+                onMouseEnter={(e) => {
+                  const btn = e.currentTarget.parentNode.querySelector(".bookmark-button");
+                  if (btn) btn.style.opacity = 1;
+                }}
+                onMouseLeave={(e) => {
+                  const btn = e.currentTarget.parentNode.querySelector(".bookmark-button");
+                  if (btn) btn.style.opacity = 0;
+                }}
+              >
                 <span className={`surah-number ${readMode ? "readmode-number" : ""}`}>
                   {s.id}
                 </span>
                 <strong className="surah-name">{s.name_simple}</strong>
               </div>
+
               <div className="surah-name-arabic">{s.name_arabic}</div>
               <small className="verses-count">{s.verses_count} verses</small>
 
